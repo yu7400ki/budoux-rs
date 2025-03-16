@@ -16,6 +16,18 @@ limitations under the License.
 
 use std::collections::HashMap;
 
+#[cfg(feature = "ja")]
+use crate::models::JA_MODEL;
+
+#[cfg(feature = "zh-hans")]
+use crate::models::ZH_HANS_MODEL;
+
+#[cfg(feature = "zh-hant")]
+use crate::models::ZH_HANT_MODEL;
+
+#[cfg(feature = "th")]
+use crate::models::TH_MODEL;
+
 pub struct Parser {
     model: HashMap<String, HashMap<String, f64>>,
     base_score: f64,
@@ -98,6 +110,26 @@ impl Parser {
             .and_then(|map| map.get(value))
             .copied()
             .unwrap_or(0.0)
+    }
+
+    #[cfg(feature = "ja")]
+    pub fn load_default_japanese_parser() -> Self {
+        Self::new(JA_MODEL.to_owned())
+    }
+
+    #[cfg(feature = "zh-hans")]
+    pub fn load_default_simplified_chinese_parser() -> Self {
+        Self::new(ZH_HANS_MODEL.to_owned())
+    }
+
+    #[cfg(feature = "zh-hant")]
+    pub fn load_default_traditional_chinese_parser() -> Self {
+        Self::new(ZH_HANT_MODEL.to_owned())
+    }
+
+    #[cfg(feature = "th")]
+    pub fn load_default_thai_parser() -> Self {
+        Self::new(TH_MODEL.to_owned())
     }
 }
 
