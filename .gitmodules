@@ -1,0 +1,3 @@
+[submodule "budoux"]
+	path = budoux
+	url = https://github.com/google/budoux
