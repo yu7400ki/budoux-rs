@@ -3,4 +3,14 @@ name = "budoux-rs"
 version = "0.1.0"
 edition = "2024"
 
+[features]
+default = []
+ja = []
+zh-hans = []
+zh-hant = []
+th = []
+
 [dependencies]
+
+[build-dependencies]
+serde_json = "1"
