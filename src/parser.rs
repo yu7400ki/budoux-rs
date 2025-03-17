@@ -127,3 +127,46 @@ impl Substring for str {
         &self[start_byte..end_byte]
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::collections::HashMap;
+
+    const TEST_SENTENCE: &str = "abcdeabcd";
+
+    #[test]
+    fn should_separate_if_a_strong_feature_item_supports() {
+        let mut model = HashMap::new();
+        let mut uw4 = HashMap::new();
+        uw4.insert("a".to_string(), 10000);
+        model.insert("UW4".to_string(), uw4);
+
+        let parser = Parser::new(model);
+        let result = parser.parse(TEST_SENTENCE);
+
+        assert_eq!(result, vec!["abcde", "abcd"]);
+    }
+
+    #[test]
+    fn should_separate_even_if_it_makes_a_phrase_of_one_character() {
+        let mut model = HashMap::new();
+        let mut uw4 = HashMap::new();
+        uw4.insert("b".to_string(), 10000);
+        model.insert("UW4".to_string(), uw4);
+
+        let parser = Parser::new(model);
+        let result = parser.parse(TEST_SENTENCE);
+
+        assert_eq!(result, vec!["a", "bcdea", "bcd"]);
+    }
+
+    #[test]
+    fn should_return_an_empty_list_when_the_input_is_a_blank_string() {
+        let model = HashMap::new();
+        let parser = Parser::new(model);
+        let result = parser.parse("");
+
+        assert_eq!(result, Vec::<String>::new());
+    }
+}
