@@ -31,7 +31,7 @@ fn main() -> std::io::Result<()> {
 
         let hashmap = generate_rust_hashmap(&model);
         let rust_code = format!(
-            r#"pub static {}_MODEL: LazyLock<Model> = LazyLock::new(|| {{
+            r#"pub static {}_MODEL: std::sync::LazyLock<Model> = std::sync::LazyLock::new(|| {{
 {}
 }});"#,
             sanitize_var_name(lang).to_ascii_uppercase(),
