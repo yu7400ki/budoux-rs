@@ -42,6 +42,10 @@ impl Parser {
     }
 
     pub fn parse<'a>(&self, sentence: &'a str) -> Vec<&'a str> {
+        if sentence.is_empty() {
+            return Vec::new();
+        }
+
         let boundaries = self.parse_boundaries(sentence);
         let mut result = Vec::new();
         let mut start = 0;
