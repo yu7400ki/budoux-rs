@@ -116,12 +116,6 @@ trait Substring {
 impl Substring for str {
     #[inline]
     fn substring(&self, start: usize, end: usize) -> &str {
-        let (start, end) = if start > end {
-            (end, start)
-        } else {
-            (start, end)
-        };
-
         let char_indices = self.char_indices().collect::<Vec<_>>();
         let start_byte = char_indices.get(start).map(|(byte, _)| *byte).unwrap_or(self.len());
         let end_byte = char_indices.get(end).map(|(byte, _)| *byte).unwrap_or(self.len());
