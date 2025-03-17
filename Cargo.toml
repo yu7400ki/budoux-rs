@@ -2,6 +2,10 @@
 name = "budoux-rs"
 version = "0.1.0"
 edition = "2024"
+description = "Unofficial Rust implementation of BudouX"
+license = "Apache-2.0"
+readme = "README.md"
+repository = "https://github.com/yu7400ki/budoux-rs"
 
 [features]
 default = []
