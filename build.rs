@@ -35,7 +35,7 @@ fn main() -> std::io::Result<()> {
 use std::collections::HashMap;
 use std::sync::LazyLock;
 
-pub static MODEL: LazyLock<HashMap<String, HashMap<String, f64>>> = LazyLock::new(|| {{
+pub static MODEL: LazyLock<HashMap<String, HashMap<String, i64>>> = LazyLock::new(|| {{
     {}
 }});"#,
             hashmap
@@ -65,9 +65,9 @@ fn generate_rust_hashmap(json_data: &Value) -> String {
 
                 for (inner_key, inner_value) in inner_obj {
                     if let Value::Number(num) = inner_value {
-                        if let Some(float_val) = num.as_f64() {
+                        if let Some(float_val) = num.as_i64() {
                             code.push_str(&format!(
-                                "{}_map.insert(\"{}\".to_string(), {:.1});\n",
+                                "{}_map.insert(\"{}\".to_string(), {});\n",
                                 sanitize_var_name(key),
                                 escape_string(inner_key),
                                 float_val

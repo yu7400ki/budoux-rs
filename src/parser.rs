@@ -29,13 +29,14 @@ use crate::models::ZH_HANT_MODEL;
 use crate::models::TH_MODEL;
 
 pub struct Parser {
-    model: HashMap<String, HashMap<String, f64>>,
-    base_score: f64,
+    model: HashMap<String, HashMap<String, i64>>,
+    base_score: i64,
 }
 
 impl Parser {
-    pub fn new(model: HashMap<String, HashMap<String, f64>>) -> Self {
-        let base_score = -0.5 * model.values().flat_map(|group| group.values()).sum::<f64>();
+    pub fn new(model: HashMap<String, HashMap<String, i64>>) -> Self {
+        let s = model.values().flat_map(|group| group.values()).sum::<i64>();
+        let base_score = -((s + 1) / 2);
 
         Parser { model, base_score }
     }
@@ -96,7 +97,7 @@ impl Parser {
             );
             score += self.get_score("TW4", sentence.substring(i, i.saturating_add(3)));
 
-            if score > 0.0 {
+            if score > 0 {
                 result.push(i);
             }
         }
@@ -104,12 +105,12 @@ impl Parser {
         result
     }
 
-    fn get_score(&self, key: &str, value: &str) -> f64 {
+    fn get_score(&self, key: &str, value: &str) -> i64 {
         self.model
             .get(key)
             .and_then(|map| map.get(value))
             .copied()
-            .unwrap_or(0.0)
+            .unwrap_or(0)
     }
 
     #[cfg(feature = "ja")]
