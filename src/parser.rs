@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-use std::collections::HashMap;
+use crate::models::Model;
 
 #[cfg(feature = "ja")]
 use crate::models::JA_MODEL;
@@ -29,12 +29,12 @@ use crate::models::ZH_HANT_MODEL;
 use crate::models::TH_MODEL;
 
 pub struct Parser {
-    model: HashMap<String, HashMap<String, i64>>,
+    model: Model,
     base_score: i64,
 }
 
 impl Parser {
-    pub fn new(model: HashMap<String, HashMap<String, i64>>) -> Self {
+    pub fn new(model: Model) -> Self {
         let s = model.values().flat_map(|group| group.values()).sum::<i64>();
         let base_score = -((s + 1) / 2);
 

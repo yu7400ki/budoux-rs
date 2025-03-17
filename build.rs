@@ -31,13 +31,10 @@ fn main() -> std::io::Result<()> {
 
         let hashmap = generate_rust_hashmap(&model);
         let rust_code = format!(
-            r#"
-use std::collections::HashMap;
-use std::sync::LazyLock;
-
-pub static MODEL: LazyLock<HashMap<String, HashMap<String, i64>>> = LazyLock::new(|| {{
-    {}
+            r#"pub static {}_MODEL: LazyLock<Model> = LazyLock::new(|| {{
+{}
 }});"#,
+            sanitize_var_name(lang).to_ascii_uppercase(),
             hashmap
         );
 
@@ -85,7 +82,7 @@ fn generate_rust_hashmap(json_data: &Value) -> String {
         }
     }
 
-    code.push_str("    model");
+    code.push_str("model");
     code
 }
 
