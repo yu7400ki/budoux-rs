@@ -28,12 +28,20 @@ use crate::models::ZH_HANT_MODEL;
 #[cfg(feature = "th")]
 use crate::models::TH_MODEL;
 
+/// A parser for BudouX that provides semantic chunking functionality.
 pub struct Parser {
+    /// BudouX model data
     model: Model,
+    /// Base score for boundary determination
     base_score: i64,
 }
 
 impl Parser {
+    /// Constructs a BudouX parser.
+    ///
+    /// # Arguments
+    ///
+    /// * `model` - A model containing scoring data for boundary determination.
     pub fn new(model: Model) -> Self {
         let s = model.values().flat_map(|group| group.values()).sum::<i64>();
         let base_score = -((s + 1) / 2);
@@ -41,6 +49,15 @@ impl Parser {
         Parser { model, base_score }
     }
 
+    /// Parses the input sentence and returns a list of semantic chunks.
+    ///
+    /// # Arguments
+    ///
+    /// * `sentence` - An input sentence.
+    ///
+    /// # Returns
+    ///
+    /// The retrieved chunks.
     pub fn parse<'a>(&self, sentence: &'a str) -> Vec<&'a str> {
         if sentence.is_empty() {
             return Vec::new();
@@ -59,6 +76,15 @@ impl Parser {
         result
     }
 
+    /// Parses the input sentence and returns a list of boundaries.
+    ///
+    /// # Arguments
+    ///
+    /// * `sentence` - An input sentence.
+    ///
+    /// # Returns
+    ///
+    /// The list of boundary positions.
     pub fn parse_boundaries(&self, sentence: &str) -> Vec<usize> {
         let mut result = Vec::new();
         let chars = sentence.chars().collect::<Vec<_>>();
@@ -88,25 +114,55 @@ impl Parser {
         result
     }
 
+    /// Gets the score for a given key and value from the model.
+    ///
+    /// # Arguments
+    ///
+    /// * `key` - The model feature group key.
+    /// * `value` - The specific substring to score.
+    ///
+    /// # Returns
+    ///
+    /// The score value or 0 if not found.
     fn get_score(&self, key: &str, value: &str) -> i64 {
         self.model.get(key).and_then(|map| map.get(value)).copied().unwrap_or(0)
     }
 
+    /// Loads a parser equipped with the default Japanese model.
+    ///
+    /// # Returns
+    ///
+    /// A parser with the default Japanese model.
     #[cfg(feature = "ja")]
     pub fn load_default_japanese_parser() -> Self {
         Self::new(JA_MODEL.to_owned())
     }
 
+    /// Loads a parser equipped with the default Simplified Chinese model.
+    ///
+    /// # Returns
+    ///
+    /// A parser with the default Simplified Chinese model.
     #[cfg(feature = "zh-hans")]
     pub fn load_default_simplified_chinese_parser() -> Self {
         Self::new(ZH_HANS_MODEL.to_owned())
     }
 
+    /// Loads a parser equipped with the default Traditional Chinese model.
+    ///
+    /// # Returns
+    ///
+    /// A parser with the default Traditional Chinese model.
     #[cfg(feature = "zh-hant")]
     pub fn load_default_traditional_chinese_parser() -> Self {
         Self::new(ZH_HANT_MODEL.to_owned())
     }
 
+    /// Loads a parser equipped with the default Thai model.
+    ///
+    /// # Returns
+    ///
+    /// A parser with the default Thai model.
     #[cfg(feature = "th")]
     pub fn load_default_thai_parser() -> Self {
         Self::new(TH_MODEL.to_owned())
