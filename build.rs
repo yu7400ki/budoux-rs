@@ -55,10 +55,7 @@ fn generate_rust_hashmap(json_data: &Value) -> String {
     if let Value::Object(obj) = json_data {
         for (key, value) in obj {
             if let Value::Object(inner_obj) = value {
-                code.push_str(&format!(
-                    "let mut {}_map = HashMap::new();\n",
-                    sanitize_var_name(key)
-                ));
+                code.push_str(&format!("let mut {}_map = HashMap::new();\n", sanitize_var_name(key)));
 
                 for (inner_key, inner_value) in inner_obj {
                     if let Value::Number(num) = inner_value {

@@ -62,39 +62,18 @@ impl Parser {
         for i in 1..chars.len() {
             let mut score = self.base_score;
 
-            score += self.get_score(
-                "UW1",
-                sentence.substring(i.saturating_sub(3), i.saturating_sub(2)),
-            );
-            score += self.get_score(
-                "UW2",
-                sentence.substring(i.saturating_sub(2), i.saturating_sub(1)),
-            );
+            score += self.get_score("UW1", sentence.substring(i.saturating_sub(3), i.saturating_sub(2)));
+            score += self.get_score("UW2", sentence.substring(i.saturating_sub(2), i.saturating_sub(1)));
             score += self.get_score("UW3", sentence.substring(i.saturating_sub(1), i));
             score += self.get_score("UW4", sentence.substring(i, i.saturating_add(1)));
-            score += self.get_score(
-                "UW5",
-                sentence.substring(i.saturating_add(1), i.saturating_add(2)),
-            );
-            score += self.get_score(
-                "UW6",
-                sentence.substring(i.saturating_add(2), i.saturating_add(3)),
-            );
+            score += self.get_score("UW5", sentence.substring(i.saturating_add(1), i.saturating_add(2)));
+            score += self.get_score("UW6", sentence.substring(i.saturating_add(2), i.saturating_add(3)));
             score += self.get_score("BW1", sentence.substring(i.saturating_sub(2), i));
-            score += self.get_score(
-                "BW2",
-                sentence.substring(i.saturating_sub(1), i.saturating_add(1)),
-            );
+            score += self.get_score("BW2", sentence.substring(i.saturating_sub(1), i.saturating_add(1)));
             score += self.get_score("BW3", sentence.substring(i, i.saturating_add(2)));
             score += self.get_score("TW1", sentence.substring(i.saturating_sub(3), i));
-            score += self.get_score(
-                "TW2",
-                sentence.substring(i.saturating_sub(2), i.saturating_add(1)),
-            );
-            score += self.get_score(
-                "TW3",
-                sentence.substring(i.saturating_sub(1), i.saturating_add(2)),
-            );
+            score += self.get_score("TW2", sentence.substring(i.saturating_sub(2), i.saturating_add(1)));
+            score += self.get_score("TW3", sentence.substring(i.saturating_sub(1), i.saturating_add(2)));
             score += self.get_score("TW4", sentence.substring(i, i.saturating_add(3)));
 
             if score > 0 {
@@ -106,11 +85,7 @@ impl Parser {
     }
 
     fn get_score(&self, key: &str, value: &str) -> i64 {
-        self.model
-            .get(key)
-            .and_then(|map| map.get(value))
-            .copied()
-            .unwrap_or(0)
+        self.model.get(key).and_then(|map| map.get(value)).copied().unwrap_or(0)
     }
 
     #[cfg(feature = "ja")]
@@ -148,14 +123,8 @@ impl Substring for str {
         };
 
         let char_indices = self.char_indices().collect::<Vec<_>>();
-        let start_byte = char_indices
-            .get(start)
-            .map(|(byte, _)| *byte)
-            .unwrap_or(self.len());
-        let end_byte = char_indices
-            .get(end)
-            .map(|(byte, _)| *byte)
-            .unwrap_or(self.len());
+        let start_byte = char_indices.get(start).map(|(byte, _)| *byte).unwrap_or(self.len());
+        let end_byte = char_indices.get(end).map(|(byte, _)| *byte).unwrap_or(self.len());
 
         &self[start_byte..end_byte]
     }
